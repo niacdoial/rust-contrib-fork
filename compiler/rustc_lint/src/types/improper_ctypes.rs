@@ -410,7 +410,7 @@ impl CTypesVisitorState {
     fn value_may_be_unchecked(self) -> bool {
         // function declarations are assumed to be rust-caller, non-rust-callee
         // function definitions are assumed to be maybe-not-rust-caller, rust-callee
-        // FnPtrs are... well, nothing's certain about anything. (TODO need more flags in enum?)
+        // FnPtrs are... well, nothing's certain about anything. (FIXME need more flags in enum?)
         // Same with statics.
         if self.is_in_static() {
             true
@@ -771,7 +771,7 @@ impl<'a, 'tcx> ImproperCTypesVisitor<'a, 'tcx> {
 
         if def.variants().is_empty() {
             // Empty enums are implicitely handled as the never type:
-            // TODO think about the FFI-safety of functions that use that
+            // FIXME think about the FFI-safety of functions that use that
             return FfiSafe;
         }
         // Check for a repr() attribute to specify the size of the
@@ -821,7 +821,7 @@ impl<'a, 'tcx> ImproperCTypesVisitor<'a, 'tcx> {
                 .iter()
                 .map(|variant| {
                     self.visit_variant_fields(state, ty, def, variant, args)
-                        // TODO: check that enums allow any (up to all) variants to be phantoms?
+                        // FIXME: check that enums allow any (up to all) variants to be phantoms?
                         // (previous code says no, but I don't know why? the problem with phantoms is that they're ZSTs, right?)
                         .forbid_phantom()
                 })
@@ -1117,10 +1117,7 @@ struct ImproperCTypesLint<'c, 'tcx> {
 }
 
 impl<'c, 'tcx> ImproperCTypesLint<'c, 'tcx> {
-    fn check_arg_for_power_alignment(
-        &mut self,
-        ty: Ty<'tcx>,
-    ) -> bool {
+    fn check_arg_for_power_alignment(&mut self, ty: Ty<'tcx>) -> bool {
         // Structs (under repr(C)) follow the power alignment rule if:
         //   - the first field of the struct is a floating-point type that
         //     is greater than 4-bytes, or
@@ -1150,10 +1147,7 @@ impl<'c, 'tcx> ImproperCTypesLint<'c, 'tcx> {
         return false;
     }
 
-    fn check_struct_for_power_alignment(
-        &mut self,
-        item: &'tcx hir::Item<'tcx>,
-    ) {
+    fn check_struct_for_power_alignment(&mut self, item: &'tcx hir::Item<'tcx>) {
         let tcx = self.cx.tcx;
         let adt_def = tcx.adt_def(item.owner_id.to_def_id());
         if adt_def.repr().c()
@@ -1237,7 +1231,7 @@ impl<'c, 'tcx> ImproperCTypesLint<'c, 'tcx> {
                 (span, ffi_res)
             })
             // even in function *definitions*, `FnPtr`s are always function declarations ...right?
-            // (TODO: we can't do that yet because one of rustc's crates can't compile if we do)
+            // (FIXME: we can't do that yet because one of rustc's crates can't compile if we do)
             .for_each(|(span, ffi_res)| self.process_ffi_result(span, ffi_res, fn_mode));
         //.drain();
     }
@@ -1435,7 +1429,7 @@ impl<'tcx> LateLintPass<'tcx> for ImproperCTypesDefinitions {
             // Structs are checked based on if they follow the power alignment
             // rule (under repr(C)).
             hir::ItemKind::Struct(..) => {
-                ImproperCTypesLint{cx}.check_struct_for_power_alignment(item);
+                ImproperCTypesLint { cx }.check_struct_for_power_alignment(item);
             }
             // See `check_field_def`..
             hir::ItemKind::Union(..) | hir::ItemKind::Enum(..) => {}
