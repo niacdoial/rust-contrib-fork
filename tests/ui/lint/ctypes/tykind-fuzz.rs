@@ -2,7 +2,7 @@
 //@ edition:2018
 
 #![allow(dead_code,unused_variables)]
-#![deny(improper_ctypes,improper_ctypes_definitions)]
+#![deny(improper_ctypes, improper_c_fn_definitions, improper_ctype_definitions, improper_c_callbacks)]
 
 // we want ALL the ty_kinds, including the feature-gated ones
 #![feature(extern_types)]

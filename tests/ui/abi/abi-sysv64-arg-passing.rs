@@ -71,7 +71,9 @@ mod tests {
     }
 
     #[repr(C)]
-    pub struct Empty;
+    #[allow(improper_ctype_definitions)]
+    pub struct Empty;  // TODO: is this safe or not??? the tests and the lint disagree and it's a
+                       // miracle this wasn't caught earlier
 
     #[repr(C)]
     #[derive(Copy, Clone)]

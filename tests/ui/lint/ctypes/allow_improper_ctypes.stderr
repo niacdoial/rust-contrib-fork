@@ -1,0 +1,149 @@
+error: repr(C) type uses type `String`, which is not FFI-safe
+  --> $DIR/allow_improper_ctypes.rs:15:1
+   |
+LL | struct UnsafeStruct (String);
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not FFI-safe
+   |
+   = note: this struct/enum/union (`UnsafeStruct`) is FFI-unsafe due to a `String` field
+note: the type is defined here
+  --> $DIR/allow_improper_ctypes.rs:15:1
+   |
+LL | struct UnsafeStruct (String);
+   | ^^^^^^^^^^^^^^^^^^^
+   = help: consider adding a `#[repr(C)]` or `#[repr(transparent)]` attribute to this struct
+   = note: this struct has unspecified layout
+note: the lint level is defined here
+  --> $DIR/allow_improper_ctypes.rs:2:53
+   |
+LL | #![deny(improper_ctypes, improper_c_fn_definitions, improper_ctype_definitions, improper_c_callbacks)]
+   |                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: `extern` callback uses type `(i32, i32)`, which is not FFI-safe
+  --> $DIR/allow_improper_ctypes.rs:36:20
+   |
+LL | type UnsafeFnPtr = extern "C" fn((i32, i32))->i32;
+   |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not FFI-safe
+   |
+   = note: the function pointer to `extern "C" fn((i32, i32)) -> i32` is FFI-unsafe due to `(i32, i32)`
+   = help: consider using a struct instead
+   = note: tuples have unspecified layout
+note: the lint level is defined here
+  --> $DIR/allow_improper_ctypes.rs:2:81
+   |
+LL | #![deny(improper_ctypes, improper_c_fn_definitions, improper_ctype_definitions, improper_c_callbacks)]
+   |                                                                                 ^^^^^^^^^^^^^^^^^^^^
+
+error: `extern` callback uses type `&i32`, which is not FFI-safe
+  --> $DIR/allow_improper_ctypes.rs:42:30
+   |
+LL | type UnsafeRustCalleeFnPtr = extern "C" fn(i32)->&'static i32;
+   |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not FFI-safe
+   |
+   = note: the function pointer to `extern "C" fn(i32) -> &i32` is FFI-unsafe due to `&i32`
+   = help: consider using a raw pointer, or wrapping `&i32` in an `Option<_>`
+   = note: boxes and references are assumed to be valid (non-null, non-dangling, aligned) pointers,
+           which cannot be garanteed if their values are produced by non-rust code
+
+error: `extern` fn uses type `&String`, which is not FFI-safe
+  --> $DIR/allow_improper_ctypes.rs:65:23
+   |
+LL | extern "C" fn fn1u(e: &String) -> &str {&*e}
+   |                       ^^^^^^^ not FFI-safe
+   |
+   = help: consider using a raw pointer, or wrapping `&String` in an `Option<_>`
+   = note: boxes and references are assumed to be valid (non-null, non-dangling, aligned) pointers,
+           which cannot be garanteed if their values are produced by non-rust code
+note: the lint level is defined here
+  --> $DIR/allow_improper_ctypes.rs:2:26
+   |
+LL | #![deny(improper_ctypes, improper_c_fn_definitions, improper_ctype_definitions, improper_c_callbacks)]
+   |                          ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: `extern` fn uses type `&str`, which is not FFI-safe
+  --> $DIR/allow_improper_ctypes.rs:65:35
+   |
+LL | extern "C" fn fn1u(e: &String) -> &str {&*e}
+   |                                   ^^^^ not FFI-safe
+   |
+   = help: consider using `*const u8` and a length instead
+   = note: this reference to an unsized type contains metadata, which makes it incompatible with a C pointer
+
+error: `extern` fn uses type `UnsafeStruct`, which is not FFI-safe
+  --> $DIR/allow_improper_ctypes.rs:71:23
+   |
+LL | extern "C" fn fn2u(e: UnsafeStruct) {}
+   |                       ^^^^^^^^^^^^ not FFI-safe
+   |
+   = note: this struct/enum/union (`UnsafeStruct`) is FFI-unsafe due to a `String` field
+note: the type is defined here
+  --> $DIR/allow_improper_ctypes.rs:15:1
+   |
+LL | struct UnsafeStruct (String);
+   | ^^^^^^^^^^^^^^^^^^^
+   = help: consider adding a `#[repr(C)]` or `#[repr(transparent)]` attribute to this struct
+   = note: this struct has unspecified layout
+
+error: `extern` fn uses type `outer::UnsafeStruct`, which is not FFI-safe
+  --> $DIR/allow_improper_ctypes.rs:75:24
+   |
+LL | extern "C" fn fn2ou(e: outer::UnsafeStruct) {}
+   |                        ^^^^^^^^^^^^^^^^^^^ not FFI-safe
+   |
+   = note: this struct/enum/union (`outer::UnsafeStruct`) is FFI-unsafe due to a `String` field
+   = help: consider adding a `#[repr(C)]` or `#[repr(transparent)]` attribute to this struct
+   = note: this struct has unspecified layout
+
+error: `extern` fn uses type `AllowedUnsafeStruct`, which is not FFI-safe
+  --> $DIR/allow_improper_ctypes.rs:80:23
+   |
+LL | extern "C" fn fn3u(e: AllowedUnsafeStruct) {}  // FIXME: ...ideally the lint should not trigger here
+   |                       ^^^^^^^^^^^^^^^^^^^ not FFI-safe
+   |
+   = note: this struct/enum/union (`AllowedUnsafeStruct`) is FFI-unsafe due to a `String` field
+note: the type is defined here
+  --> $DIR/allow_improper_ctypes.rs:20:1
+   |
+LL | struct AllowedUnsafeStruct (String);
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^
+   = help: consider adding a `#[repr(C)]` or `#[repr(transparent)]` attribute to this struct
+   = note: this struct has unspecified layout
+
+error: `extern` fn uses type `outer::AllowedUnsafeStruct`, which is not FFI-safe
+  --> $DIR/allow_improper_ctypes.rs:84:24
+   |
+LL | extern "C" fn fn3ou(e: outer::AllowedUnsafeStruct) {}  // FIXME: ...ideally the lint should not trigger here
+   |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^ not FFI-safe
+   |
+   = note: this struct/enum/union (`outer::AllowedUnsafeStruct`) is FFI-unsafe due to a `String` field
+   = help: consider adding a `#[repr(C)]` or `#[repr(transparent)]` attribute to this struct
+   = note: this struct has unspecified layout
+
+error: `extern` fn uses type `UnsafeFromForeignStruct<'_>`, which is not FFI-safe
+  --> $DIR/allow_improper_ctypes.rs:89:23
+   |
+LL | extern "C" fn fn4u(e: UnsafeFromForeignStruct) {}
+   |                       ^^^^^^^^^^^^^^^^^^^^^^^ not FFI-safe
+   |
+   = note: this struct/enum/union (`UnsafeFromForeignStruct<'_>`) is FFI-unsafe due to a `&u32` field
+note: the type is defined here
+  --> $DIR/allow_improper_ctypes.rs:27:1
+   |
+LL | struct UnsafeFromForeignStruct<'a> (&'a u32);
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   = help: consider using a raw pointer, or wrapping `&u32` in an `Option<_>`
+   = note: boxes and references are assumed to be valid (non-null, non-dangling, aligned) pointers,
+           which cannot be garanteed if their values are produced by non-rust code
+
+error: `extern` fn uses type `outer::UnsafeFromForeignStruct<'_>`, which is not FFI-safe
+  --> $DIR/allow_improper_ctypes.rs:93:24
+   |
+LL | extern "C" fn fn4ou(e: outer::UnsafeFromForeignStruct) {}
+   |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not FFI-safe
+   |
+   = note: this struct/enum/union (`outer::UnsafeFromForeignStruct<'_>`) is FFI-unsafe due to a `&u32` field
+   = help: consider using a raw pointer, or wrapping `&u32` in an `Option<_>`
+   = note: boxes and references are assumed to be valid (non-null, non-dangling, aligned) pointers,
+           which cannot be garanteed if their values are produced by non-rust code
+
+error: aborting due to 11 previous errors
+

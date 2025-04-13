@@ -1,5 +1,5 @@
 #![crate_type = "lib"]
-#![deny(improper_ctypes_definitions)]
+#![deny(improper_ctypes, improper_c_fn_definitions, improper_ctype_definitions, improper_c_callbacks)]
 
 pub fn bad(f: extern "C" fn([u8])) {}
 //~^ ERROR `extern` fn uses type `[u8]`, which is not FFI-safe
@@ -33,7 +33,7 @@ pub type Foo2<T> = extern "C" fn(Option<&<T as FooTrait>::FooType>);
 
 pub struct FfiUnsafe;
 
-#[allow(improper_ctypes_definitions)]
+#[allow(improper_c_fn_definitions)]
 extern "C" fn f(_: FfiUnsafe) {
     unimplemented!()
 }

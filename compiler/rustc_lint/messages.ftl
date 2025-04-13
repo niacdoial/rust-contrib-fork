@@ -355,7 +355,7 @@ lint_impl_trait_overcaptures = `{$self_ty}` will capture more lifetimes than pos
 lint_impl_trait_redundant_captures = all possible in-scope parameters are already captured, so `use<...>` syntax is redundant
     .suggestion = remove the `use<...>` syntax
 
-lint_improper_ctypes = `extern` {$desc} uses type `{$ty}`, which is not FFI-safe
+lint_improper_ctypes = {$desc} uses type `{$ty}`, which is not FFI-safe
     .label = not FFI-safe
     .note = the type is defined here
 
@@ -418,14 +418,15 @@ lint_improper_ctypes_str_help = consider using `*const u8` and a length instead
 lint_improper_ctypes_str_reason = string slices have no C equivalent
 
 lint_improper_ctypes_struct_dueto = this struct/enum/union (`{$ty}`) is FFI-unsafe due to a `{$inner_ty}` field
+
 lint_improper_ctypes_struct_fieldless_help = consider adding a member to this struct
+lint_improper_ctypes_struct_fieldless_reason = `{$ty}` has no fields
 
-lint_improper_ctypes_struct_fieldless_reason = this struct has no fields
-lint_improper_ctypes_struct_layout_help = consider adding a `#[repr(C)]` or `#[repr(transparent)]` attribute to this struct
+lint_improper_ctypes_struct_layout_help = consider adding a `#[repr(C)]` (not `#[repr(C,packed)]`) or `#[repr(transparent)]` attribute to this struct
 
-lint_improper_ctypes_struct_layout_reason = this struct has unspecified layout
-lint_improper_ctypes_struct_non_exhaustive = this struct is non-exhaustive
-lint_improper_ctypes_struct_zst = this struct contains only zero-sized fields
+lint_improper_ctypes_struct_layout_reason = `{$ty}` has unspecified layout
+lint_improper_ctypes_struct_non_exhaustive = `{$ty}` is non-exhaustive
+lint_improper_ctypes_struct_zst = `{$ty}` contains only zero-sized fields
 
 lint_improper_ctypes_tuple_help = consider using a struct instead
 

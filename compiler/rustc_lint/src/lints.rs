@@ -1923,6 +1923,7 @@ impl<'a> LintDiagnostic<'a, ()> for ImproperCTypes<'_> {
         for reason in self.reasons.into_iter() {
             diag.subdiagnostic(reason);
         }
+        diag.arg("ty", self.ty); // ?
     }
 }
 
