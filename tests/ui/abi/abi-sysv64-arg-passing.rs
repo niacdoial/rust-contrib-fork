@@ -32,7 +32,7 @@
 // note: windows is ignored as rust_test_helpers does not have the sysv64 abi on windows
 
 #[allow(dead_code)]
-#[allow(improper_ctypes)]
+#[allow(improper_ctypes, improper_ctype_definitions)]
 
 #[cfg(target_arch = "x86_64")]
 mod tests {
@@ -71,6 +71,7 @@ mod tests {
     }
 
     #[repr(C)]
+    #[allow(improper_ctype_definitions)]
     pub struct Empty;
 
     #[repr(C)]

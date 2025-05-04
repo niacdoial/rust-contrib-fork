@@ -4,7 +4,7 @@
 //@ ignore-pass (test emits codegen-time warnings)
 #![no_core]
 #![feature(no_core, lang_items, repr_simd)]
-#![allow(improper_ctypes_definitions)]
+#![allow(improper_c_fn_definitions)]
 #[lang = "sized"]
 trait Sized {}
 

@@ -6,7 +6,7 @@
 //@ needs-llvm-components: x86
 #![feature(no_core, lang_items, repr_simd)]
 #![no_core]
-#![allow(improper_ctypes_definitions)]
+#![allow(improper_c_fn_definitions)]
 
 #[lang = "sized"]
 trait Sized {}

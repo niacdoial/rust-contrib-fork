@@ -99,7 +99,7 @@ unsafe extern "C" fn fn_i64_i64(num: i64) -> i64 {
 // CHECK-LABEL: fn_i128_i128:
 // wasm32-wasip1: .functype fn_i128_i128 (i32, i64, i64) -> ()
 // wasm64-unknown: .functype fn_i128_i128 (i64, i64, i64) -> ()
-#[allow(improper_ctypes_definitions)]
+#[allow(improper_c_fn_definitions)]
 #[no_mangle]
 #[naked]
 unsafe extern "C" fn fn_i128_i128(num: i128) -> i128 {

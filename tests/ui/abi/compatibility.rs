@@ -63,7 +63,8 @@
 #![feature(unsized_fn_params, transparent_unions)]
 #![no_std]
 #![no_core]
-#![allow(unused, improper_ctypes_definitions, internal_features)]
+#![allow(unused, internal_features)]
+#![allow(improper_ctype_definitions, improper_c_fn_definitions, improper_c_callbacks)]
 
 // FIXME: some targets are broken in various ways.
 // Hence there are `cfg` throughout this test to disable parts of it on those targets.

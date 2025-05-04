@@ -11,7 +11,7 @@
 #![feature(no_core, lang_items, repr_simd, s390x_target_feature)]
 #![no_core]
 #![crate_type = "lib"]
-#![allow(non_camel_case_types, improper_ctypes_definitions)]
+#![allow(non_camel_case_types, improper_c_fn_definitions)]
 #![deny(abi_unsupported_vector_types)]
 
 #[lang = "sized"]
